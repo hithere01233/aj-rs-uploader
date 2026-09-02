@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AJ & RS Upload Method</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0f0f0f;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #1a1a1a;
+      padding: 40px;
+      border-radius: 16px;
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+    }
+    h1 {
+      margin-bottom: 8px;
+    }
+    p {
+      color: #aaa;
+      margin-bottom: 30px;
+    }
+    input[type="file"] {
+      margin-bottom: 20px;
+    }
+    button {
+      background: #fe2c55;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+    #status {
+      margin-top: 20px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>AJ & RS Upload Method</h1>
+    <p>Upload your video to patch it for higher TikTok quality</p>
+
+    <input type="file" id="video" accept="video/mp4,video/quicktime">
+    <br>
+    <button id="btn" onclick="upload()">Patch Video</button>
+    <div id="status"></div>
+  </div>
+
+  <script>
+    async function upload() {
+      const fileInput = document.getElementById("video");
+      const btn = document.getElementById("btn");
+      const status = document.getElementById("status");
+
+      if (!fileInput.files[0]) {
+        status.innerText = "Please select a video first";
+        return;
+      }
+
+      btn.disabled = true;
+      status.innerText = "Uploading & patching... please wait";
+
+      const formData = new FormData();
+      formData.append("file", fileInput.files[0]);
+
+      try {
+        const response = await fetch("/patch", {
+          method: "POST",
+          body: formData
+        });
+
+        if (!response.ok) throw new Error("Patching failed");
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "AJ_RS_Patched.mp4";
+        a.click();
+
+        status.innerText = "Done! Download started.";
+      } catch (err) {
+        status.innerText = "Error: " + err.message;
+      }
+
+      btn.disabled = false;
+    }
+  </script>
+</body>
+</html>
