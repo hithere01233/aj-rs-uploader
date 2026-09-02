@@ -1,4 +1,4 @@
-```python
+python
 from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -94,4 +94,3 @@ async def patch_video(
             status_code=500,
             detail=f"Patching failed: {str(e)}"
         )
-```
